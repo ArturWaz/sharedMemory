@@ -9,10 +9,14 @@
 #include <vector>
 #include <stdexcept>
 #include <cstring>
-#include <boost/interprocess/shared_memory_object.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
 
+//#ifdef __linux__ // linux
+    #include <boost/interprocess/shared_memory_object.hpp>
+/*#else // windows
+    #include <boost/interprocess/windows_shared_memory.hpp>
+#endif*/
 
 
 template <class T>
@@ -20,7 +24,7 @@ class SharedTable {
     //static_assert(std::is_arithmetic<T>::value, "\nOnly basic types are supported.\n");
 public:
 
-#ifdef __linux__ // linux
+//#ifdef __linux__ // linux
 
     SharedTable(char const *name, size_t size, boost::interprocess::mode_t mode)
                 : sharedMemory_(boost::interprocess::create_only,name,mode),
@@ -44,24 +48,21 @@ public:
         }
     }
 
-#else // windows
+/*#else // windows
 
-    SharedTable(boost::interprocess::create_only_t, char const *name, boost::interprocess::mode_t mode, size_t size)
+    SharedTable(char const *name, size_t size, boost::interprocess::mode_t mode)
                 : sharedMemory_(boost::interprocess::create_only,name,mode,size*sizeof(T)),
-                  mtx_(boost::interprocess::create_only,(std::string(name)+std::string("_mtx")).c_str()) {
-        //sharedMemory_.truncate(size*sizeof(T));
-        mappedRegion_.mapped_region(sharedMemory_,mode);
-    }
+                  mtx_(boost::interprocess::create_only,(std::string(name)+std::string("_mtx")).c_str()),
+                  mappedRegion_(sharedMemory_,mode) {}
 
-    SharedTable(boost::interprocess::open_only_t, char const *name, boost::interprocess::mode_t mode)
+    SharedTable(char const *name, boost::interprocess::mode_t mode)
                 : sharedMemory_(boost::interprocess::open_only,name,mode),
-                  mtx_(boost::interprocess::open_only,(std::string(name)+std::string("_mtx")).c_str()) {
-        mappedRegion_.mapped_region(sharedMemory_,mode);
-    }
+                  mtx_(boost::interprocess::open_only,(std::string(name)+std::string("_mtx")).c_str()),
+                  mappedRegion_(sharedMemory_,mode) {}
 
     ~SharedTable() {}
 
-#endif
+#endif*/
 
 
 
@@ -109,16 +110,16 @@ private:
 
 
 
-#ifdef __linux__ // linux
+//#ifdef __linux__ // linux
 
     boost::interprocess::shared_memory_object sharedMemory_;
     bool createOnly_;
 
-#else // windows
+/*#else // windows
 
     boost::interprocess::windows_shared_memory sharedMemory_;
 
-#endif
+#endif*/
 
     boost::interprocess::named_mutex mtx_;
     boost::interprocess::mapped_region mappedRegion_;
