@@ -6,7 +6,7 @@
 #define CLIENT_SHAREDMEMORY_H
 
 
-//#define POSIX__SHARED__MEMORY
+#define POSIX__SHARED__MEMORY
 
 
 #include <cstring>
