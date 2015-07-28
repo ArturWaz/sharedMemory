@@ -19,10 +19,14 @@ void printPacket(T *table, size_t length) {
 int main() {
 
     SharedTable<int> sharedTable("testMemory",10,boost::interprocess::read_write);
+
     int table[10];
 
+    cout << "Memory size [ SharedTable::size() ]:     " << sharedTable.size() << endl;
+    cout << "Memory size [ SharedMemory::size() ]:    " << sharedTable.SharedMemory::size() << endl;
+
     while (true) {
-        sharedTable.readData(table);
+        sharedTable.readData(table,10);
 
         printPacket(table,10);
 

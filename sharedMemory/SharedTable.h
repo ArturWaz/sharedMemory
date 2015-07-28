@@ -6,9 +6,9 @@
 #define SHAREDMEMORY_SHAREDTABLE_H
 
 
-#include <vector>
 #include <stdexcept>
 #include "SharedMemory.h"
+
 
 
 template <class T>
@@ -39,22 +39,12 @@ public:
     }
 
 
-    void readData(std::vector<T> &v) {
-        if (v.size() != size()) throw std::length_error("Sizes of shared table and std::vector are different, function: SharedTable::getTable(std::vector<T> &)");
-        mtx_.lock();
-        for (int i = 0; i < v.size(); ++i) {
-            v[i] = get_(i);
-        }
-        mtx_.unlock();
+    inline void readData(T *table, size_t tableLength) {
+        SharedMemory::readData(table,tableLength*sizeof(T));
     }
 
-    void writeData(std::vector<T> const &v) {
-        if (v.size() != size()) throw std::length_error("Sizes of shared table and std::vector are different, function: SharedTable::setTable(std::vector<T> const &)");
-        mtx_.lock();
-        for (int i = 0; i < v.size(); ++i) {
-            get_(i) = v[i];
-        }
-        mtx_.unlock();
+    inline void writeData(T *table, size_t tableLength) {
+        SharedMemory::writeData(table,tableLength*sizeof(T));
     }
 
 

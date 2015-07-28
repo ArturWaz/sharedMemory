@@ -4,12 +4,13 @@
 
 
 
-
+#include <iostream>
 #include <SharedTable.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread/thread.hpp>
 
 
+using namespace std;
 
 template<class T>
 void tableSquare(T *table, size_t length) {
@@ -29,6 +30,9 @@ int main() {
     SharedTable<int> sharedTable("testMemory",boost::interprocess::read_write);
 
     int table[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    cout << "Memory size [ SharedTable::size() ]:     " << sharedTable.size() << endl;
+    cout << "Memory size [ SharedMemory::size() ]:    " << sharedTable.SharedMemory::size() << endl;
 
     for (size_t i = 0; i < 10; ++i) {
 
