@@ -36,7 +36,7 @@ int main() {
 
     for (size_t i = 0; i < 10; ++i) {
 
-        sharedTable.writeData(table);
+        sharedTable.writeData(table,10);
 
         tableMultiply2x(table,10);
 
