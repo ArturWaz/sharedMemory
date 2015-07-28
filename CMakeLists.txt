@@ -15,7 +15,14 @@ endif ( UNIX )
 
 include_directories(sharedMemory)
 
-set(libraries pthread rt boost_system boost_thread)
+if ( UNIX )
+    set(libraries pthread rt boost_system boost_thread)
+elseif ( WIN32 )
+    set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} C:/msys64/mingw64/lib)
+    set(libraries pthread boost_system-mt boost_thread-mt)
+else ()
+    message( FATAL_ERROR "\nSystem is not supported, cannot compile program." )
+endif ()
 
 
 set(PROJECT_NAME server)
